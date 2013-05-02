@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/reddit.css" />
+
+
+  </head>
+  <body>
+
+    <script type="text/x-handlebars">
+      <div class="navbar navbar-inverse navbar-static-top">
+        <div class="navbar-inner">
+            <a href="#" class="active brand">MyReddits</a>
+            {{partial search}}
+        </div>
+      </div>
+      <div class="horizontal-container">
+        {{outlet}}
+      </div>
+    </script>
+
+    <script type="text/x-handlebars" id="_search">
+      <div class="navbar-form pull-right">
+        {{view App.FocusTextField
+            disabledBinding="isSearching" 
+            action="addSubreddit" 
+            placeholder="subreddit"
+            class="input-medium"
+        }}
+        <button class="btn btn-primary">Add</button>
+      </div>
+    </script>
+
+    <script type="text/x-handlebars" id="index">
+      {{#each model}}
+        {{view App.SubRedditView class="column"}}
+      {{/each}}
+    </script>
+
+    <script type="text/x-handlebars" id="subreddit">
+      <div class="title">
+        <div class="pull-right nav">
+          <div class="form-inline">
+          {{#unless processing}}
+            {{#if before}}
+            <button class="btn" {{action prevPage this}}><i class="icon-chevron-left"></i> Prev</button>
+            {{/if}}
+            {{#if after}}
+            <button class="btn" {{action nextPage this}}>Next <i class="icon-chevron-right"></i></button>
+            {{/if}}
+            <button class="btn btn-danger" {{action removeSubreddit this}}>
+              <i class="icon-trash"></i>
+            </button>
+          {{else}}
+            <b>Please wait... <i class="icon-spin icon-refresh"></i></b>
+          {{/unless}}
+          </div>
+        </div>
+        <h4>{{name}}</h4>
+      </div>
+      <div class="column-body">
+        {{#each content}}
+          {{view App.PostItem class="media"}}
+        {{/each}}
+      </div>
+    </script>
+
+    <script type="text/x-handlebars" id="content">
+      yo
+      <iframe {{bindAttr src="controller.contentUrl"}} class="full-view" frameborder="0"></iframe>
+    </script>
+
+    <script type="text/x-handlebars" id="post">
+      <div class="pull-left">
+        {{#unless noThumb}}
+          <a {{bindAttr href="url"}}target="_blank">
+            <img {{bindAttr src="thumbnail"}} width="120" alt="" class="media-object img-polaroid" />
+          </a>
+        {{/unless}}
+      </div>
+      <div class="media-body">
+        <div class="pull-right">
+          <h5>
+            <a {{bindAttr href="permalink"}} target="_blank">
+              <i class="icon-comments"></i> {{num_comments}}
+            </a>
+          </h5>
+        </div>
+        <a {{bindAttr href="url"}} target="_blank">
+          <h5 class="media-heading">{{title}}</h5>
+        </a>
+        <small class="muted">{{author}}</small>
+        <small>{{date created}}</small>
+      </div>
+      <div class="media-meta">
+        <i class="icon-chevron-up text-success"></i> {{ups}}
+        <i class="icon-chevron-down text-error"></i> {{downs}}
+      </div>
+    </script>
+
+    <script type="text/javascript" src="/js/jquery.js"></script>
+    <script type="text/javascript" src="/js/handlebars.js"></script>
+    <script type="text/javascript" src="/js/ember.js"></script>
+    <script type="text/javascript" src="/js/moment.js"></script>
+    <script type="text/javascript" src="/js/reddit.js"></script>
+  </body>
+</html>
